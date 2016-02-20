@@ -249,6 +249,7 @@ function loadPoints(keywordId)
 function loadKeywords()
 {
 	$.get('/api.php?action=keywords', function(data) {
+		$('#filter-trends-menu .item').remove();
 		$.each(data, function(index, value) {
 			$('#filter-trends-menu .header').after('<div class="item" data-keyword-id="'+value.id+'"><div class="ui black empty circular label"></div>'+value.keyword+' | '+value.total+' records</div>');
 		});
