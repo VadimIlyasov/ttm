@@ -1,0 +1,1 @@
+ALTER TABLE `tweets` CHANGE `latitude` `latitude` DOUBLE(11,8) NOT NULL, CHANGE `longitude` `longitude` DOUBLE(11,8) NOT NULL;
