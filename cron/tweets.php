@@ -1,5 +1,6 @@
 <?php
 
+chdir(dirname(__FILE__));
 require_once('../loader.php');
 set_time_limit(300);
 

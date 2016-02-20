@@ -38,81 +38,103 @@
       height: 100%;
       background: red;
     }
+
+    body .ui.form .error.message {
+      display: block !important;
+    }
   </style>
 </head>
 <body>
 
-<script src='https://maps.googleapis.com/maps/api/js?key=AIzaSyAquu9CH7H7PLjIF3lcjFCU2VwmyvmgNfk&sensor=false&extension=.js'></script> 
-<script> 
-    google.maps.event.addDomListener(window, 'load', init);
-    var map;
-    function init() {
-        var mapOptions = {
-            center: new google.maps.LatLng(51.923957,97.848171),
-            zoom: 2,
-            zoomControl: true,
-            zoomControlOptions: {
-                style: google.maps.ZoomControlStyle.SMALL,
-            },
-            disableDoubleClickZoom: true,
-            mapTypeControl: false,
-            scaleControl: false,
-            scrollwheel: true,
-            panControl: true,
-            streetViewControl: false,
-            draggable : true,
-            overviewMapControl: true,
-            overviewMapControlOptions: {
-                opened: true,
-            },
-            mapTypeId: google.maps.MapTypeId.ROADMAP,
-            styles: [{"featureType":"water","elementType":"all","stylers":[{"hue":"#7fc8ed"},{"saturation":55},{"lightness":-6},{"visibility":"on"}]},{"featureType":"water","elementType":"labels","stylers":[{"hue":"#7fc8ed"},{"saturation":55},{"lightness":-6},{"visibility":"off"}]},{"featureType":"poi.park","elementType":"geometry","stylers":[{"hue":"#83cead"},{"saturation":1},{"lightness":-15},{"visibility":"on"}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"hue":"#f3f4f4"},{"saturation":-84},{"lightness":59},{"visibility":"on"}]},{"featureType":"landscape","elementType":"labels","stylers":[{"hue":"#ffffff"},{"saturation":-100},{"lightness":100},{"visibility":"off"}]},{"featureType":"road","elementType":"geometry","stylers":[{"hue":"#ffffff"},{"saturation":-100},{"lightness":100},{"visibility":"on"}]},{"featureType":"road","elementType":"labels","stylers":[{"hue":"#bbbbbb"},{"saturation":-100},{"lightness":26},{"visibility":"on"}]},{"featureType":"road.arterial","elementType":"geometry","stylers":[{"hue":"#ffcc00"},{"saturation":100},{"lightness":-35},{"visibility":"simplified"}]},{"featureType":"road.highway","elementType":"geometry","stylers":[{"hue":"#ffcc00"},{"saturation":100},{"lightness":-22},{"visibility":"on"}]},{"featureType":"poi.school","elementType":"all","stylers":[{"hue":"#d7e4e4"},{"saturation":-60},{"lightness":23},{"visibility":"on"}]}]
-        }
-        var mapElement = document.getElementById('map');
-        var map = new google.maps.Map(mapElement, mapOptions);
-        var locations = [
+  <script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAquu9CH7H7PLjIF3lcjFCU2VwmyvmgNfk&signed_in=true&libraries=visualization&callback=initMap">
+  </script>
 
-        ];
-        for (i = 0; i < locations.length; i++) {
-      if (locations[i][1] =='undefined'){ description ='';} else { description = locations[i][1];}
-      if (locations[i][2] =='undefined'){ telephone ='';} else { telephone = locations[i][2];}
-      if (locations[i][3] =='undefined'){ email ='';} else { email = locations[i][3];}
-           if (locations[i][4] =='undefined'){ web ='';} else { web = locations[i][4];}
-           if (locations[i][7] =='undefined'){ markericon ='';} else { markericon = locations[i][7];}
-            marker = new google.maps.Marker({
-                icon: markericon,
-                position: new google.maps.LatLng(locations[i][5], locations[i][6]),
-                map: map,
-                title: locations[i][0],
-                desc: description,
-                tel: telephone,
-                email: email,
-                web: web
-            });
-link = '';     }
-
-}
-</script>
-
-
-<!-- Following Menu -->
-<div class="ui large menu fixed">
-  <div class="item">
-    <i class="map icon large teal"></i>
-  </div>
-  <a class="active item" href="/">
-    <i class="icon list"></i> Maps
-  </a>
-
-  <div class="right menu">
+  <div class="ui large menu fixed">
     <a class="item" href="/">
-      <i class="icon help"></i> About
+      <i class="world icon large blue"></i>
     </a>
+    
+
+    <div class="item">
+        <div class="ui labeled icon top right pointing dropdown button" id="filter-trends-menu">
+            <i class="map icon"></i>
+            <span class="text">Select Trend</span>
+            <div class="menu">
+                <div class="ui search icon input">
+                  <i class="search icon"></i>
+                  <input type="text" name="search" placeholder="Search trends...">
+                </div>
+                <div class="divider"></div>
+                <div class="header">
+                  <i class="tags icon"></i>
+                  Filter by trend
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="item">
+        <div class="ui primary button" id="add-keyword">Add Trend</div>
+    </div>
+
+    <div class="right menu">
+      <a class="item about-app-link" href="#">
+        <i class="icon help"></i> About
+      </a>
+    </div>
+  </div>
+
+
+  <div id="map"></div>
+
+  <div class="ui active dimmer" id="loading-screen">
+    <div class="ui large text loader">Loading</div>
+  </div>
+
+  <div class="ui modal about-app">
+    <i class="close icon"></i>
+    <div class="header">
+      Twitter GeoTrends Analysis tool
+    </div>
+    <div class="image content">
+      <div class="ui medium image">
+      </div>
+      <div class="description">
+        <div class="ui header">This is tool is aimed to allow analyst and just curious users to find out global trends on different topics.</div>
+      </div>
+    </div>
+    <div class="actions">
+      <div class="ui positive right labeled icon button">
+        That's cool!
+        <i class="checkmark icon"></i>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="ui modal add-trend">
+  <i class="close icon"></i>
+  <div class="header">
+    Add Trend
+  </div>
+  <div class="content">
+    <form class="ui form">
+      <div class="field">
+        <label>Keyword</label>
+        <input type="text" id="form-keyword" placeholder="Keyword">
+      </div>
+    </form>
+  </div>
+  <div class="actions">
+    <div class="ui black deny button">
+      Cancel
+    </div>
+    <div class="ui positive right labeled icon button">
+      Add
+      <i class="checkmark icon"></i>
+    </div>
   </div>
 </div>
-
-
-<div id="map"></div>
-
 </body>
 </html>

@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `keywords` (
   `id` int(11) NOT NULL,
   `keyword` varchar(255) NOT NULL,
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `updated` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
