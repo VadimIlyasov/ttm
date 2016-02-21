@@ -3,19 +3,34 @@
 chdir(dirname(__FILE__));
 require_once('../loader.php');
 set_time_limit(300);
-ini_set('memory_limit', '3024M');
+ini_set('memory_limit', '1024M');
 
 function execInBackground($cmd) { 
     if (substr(php_uname(), 0, 7) == "Windows"){ 
         pclose(popen("start /B ". $cmd, "r"));  
     } 
     else { 
-        exec($cmd . " > /dev/null &");   
+        shell_exec($cmd . " > /dev/null &"); 
     } 
 }
 
 // Check if process is available
+function checkProcessIsLoaded($processName)
+{
+	$result = shell_exec('ps aux | grep '.$processName);
+	if (substr_count($result, $processName) > 2) {
+		return true;
+	} else {
+		return false;
+	}
+}
 
+// Run Process if not loaded
+$processPath = dirname(__FILE__).'/stream.php';
+
+if (!checkProcessIsLoaded($processPath)) {
+	execInBackground('php '.$processPath);
+}
 
 // Init needed objects
 $db = DB::getDB();
@@ -30,8 +45,8 @@ foreach ($rows as $row) {
 }
 
 // Load raw tweets
-//$stmt = $db->query('SELECT * FROM raw_tweets WHERE processed = 0 ORDER BY id ASC');
-$stmt = $db->query('SELECT * FROM raw_tweets ORDER BY id ASC');
+$stmt = $db->query('SELECT * FROM raw_tweets WHERE processed = 0 ORDER BY id ASC LIMIT 0, 30000');
+//$stmt = $db->query('SELECT * FROM raw_tweets ORDER BY id ASC');
 $responses = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
@@ -66,9 +81,12 @@ function getCountryCode($lat, $lng) {
 	}
 }
 
-$lastId = 0;
+$firstId = 0; $lastId = 0;
 $db->beginTransaction();
 foreach ($responses as $row) {
+	if ($firstId == 0) {
+		$firstId = $row['id'];
+	}
 	$lastId = $row['id'];
 	$response = $row['response'];
 	if ($response) {
@@ -80,76 +98,43 @@ foreach ($responses as $row) {
      	$words = splitIntoWords($response['text']);
 		$intersection = array_intersect($keywords, $words);
 
-     	// Check if response has geo tag
- 		if (isset($response['geo']) && $response['geo']['type'] == 'Point') {
- 			$tweet = array();
-     		$tweet['tweet_id'] = $response['id'];
-     		$tweet['satisfaction'] = $satisfaction;
-     		$tweet['latitude'] = $response['geo']['coordinates'][0];
-     		$tweet['longitude'] = $response['geo']['coordinates'][1];
-
-     		$tweet['country_code'] = getCountryCode($tweet['latitude'], $tweet['longitude']);
-
- 			if (count($intersection)) {
- 				foreach ($intersection as $keywordId => $keyword) {
- 					$tweet['keyword_id'] = $keywordId;
-
- 					$stmt = $db->prepare("SELECT * FROM tweets WHERE tweet_id=? AND keyword_id = ?");
-					$stmt->execute(array($tweet['tweet_id'], $keywordId));
-					$tweets = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-					if (!count($tweets)) {
-						$stmt = $db->prepare("INSERT INTO tweets (keyword_id, tweet_id, latitude, longitude, satisfaction) VALUES(?, ?, ?, ?, ?)");
-						$stmt->execute(array($tweet['keyword_id'], $tweet['tweet_id'], $tweet['latitude'], $tweet['longitude'], $tweet['satisfaction']));
-					}
- 				}
- 			}
- 		}
-
- 		// Add satisfaction results to the database 
- 		if ($satisfaction != 0) {
- 			foreach ($intersection as $keywordId => $keyword) {
-	 			if (count($intersection)) {
-	 				foreach ($intersection as $keywordId => $keyword) {
-	 					$stmt = $db->prepare("SELECT * FROM satisfactions WHERE tweet_id=? AND keyword_id = ?");
-						$stmt->execute(array($response['id'], $keywordId));
-
-						$tweets = $stmt->fetchAll(PDO::FETCH_ASSOC);
-						if (!count($tweets)) {
-							$stmt = $db->prepare("INSERT INTO satisfactions (keyword_id, tweet_id, satisfaction) VALUES(?, ?, ?)");
-							$stmt->execute(array($keywordId, $response['id'], $satisfaction));
-						}
-	 				}
-	 			}
-	 		}
- 		}
-
- 		// Add mentions
  		foreach ($intersection as $keywordId => $keyword) {
  			if (count($intersection)) {
+ 				// Add mentions
  				foreach ($intersection as $keywordId => $keyword) {
- 					$stmt = $db->prepare("SELECT * FROM mentions WHERE tweet_id=? AND keyword_id = ?");
-					$stmt->execute(array($response['id'], $keywordId));
+					// Add mentions
+					$time = date("Y-m-d H:i:s", $response['timestamp_ms']/1000);
+					$stmt = $db->prepare("INSERT INTO mentions (keyword_id, tweet_id, time) VALUES(?, ?, ?)");
+					$stmt->execute(array($keywordId, $response['id'], $time));
 
-					$tweets = $stmt->fetchAll(PDO::FETCH_ASSOC);
-					if (!count($tweets)) {
-						$time = date("Y-m-d H:i:s", $response['timestamp_ms']/1000);
-						$stmt = $db->prepare("INSERT INTO mentions (keyword_id, tweet_id, time) VALUES(?, ?, ?)");
-						$stmt->execute(array($keywordId, $response['id'], $time));
+					// Add satisfaction results
+					if ($satisfaction != 0) {
+						$stmt = $db->prepare("INSERT INTO satisfactions (keyword_id, tweet_id, satisfaction) VALUES(?, ?, ?)");
+						$stmt->execute(array($keywordId, $response['id'], $satisfaction));
+					}
+
+					// Check if response has geo tag
+			 		if (isset($response['geo']) && $response['geo']['type'] == 'Point') {
+			 			$tweet = array();
+			     		$tweet['tweet_id'] = $response['id'];
+			     		$tweet['satisfaction'] = $satisfaction;
+			     		$tweet['latitude'] = $response['geo']['coordinates'][0];
+			     		$tweet['longitude'] = $response['geo']['coordinates'][1];
+
+			     		$tweet['country_code'] = getCountryCode($tweet['latitude'], $tweet['longitude']);
+						$stmt = $db->prepare("INSERT INTO tweets (keyword_id, tweet_id, latitude, longitude, satisfaction, country_code) VALUES(?, ?, ?, ?, ?, ?)");
+						$stmt->execute(array($keywordId, $tweet['tweet_id'], $tweet['latitude'], $tweet['longitude'], $tweet['satisfaction'], $tweet['country_code']));
 					}
  				}
  			}
  		}
     }
-	// Update last updated time
-	// $stmt = $db->prepare("UPDATE keywords SET updated=NOW() WHERE id=?");
-	// $stmt->execute(array($keyword['id']));
 }
 $db->commit();
 
 if ($lastId) {
-	$stmt = $db->prepare('UPDATE raw_tweets SET processed = 1 WHERE id<=?');
-	$stmt->execute(array($lastId));
+	$stmt = $db->prepare('UPDATE raw_tweets SET processed = 1 WHERE id>=? AND id<=?');
+	$stmt->execute(array($firstId, $lastId));
 }
 
 ?>

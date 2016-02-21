@@ -5,12 +5,19 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Twitter Geo Trends Analysis</title>
+  <title>Twitter Geo Trends Analysis - Reports</title>
   <link rel="stylesheet" type="text/css" href="/assets/css/semantic.min.css">
 
   <script src="/assets/jquery-2.2.0.min.js"></script>
   <script src="/assets/css/semantic.min.js"></script>
+  <script src="/assets/tablesort.min.js"></script>
   <script src="/assets/main.js"></script>
+
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript">
+    google.charts.load('current', {'packages':['corechart']});
+  </script>
+
 
   <style type="text/css">
     .ui.vertical.stripe {
@@ -44,47 +51,17 @@
     }
   </style>
 </head>
-<body>
-
-  <script async defer
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAquu9CH7H7PLjIF3lcjFCU2VwmyvmgNfk&signed_in=true&libraries=visualization&callback=initMap">
-  </script>
-
+<body class="reports">
   <div class="ui large menu fixed">
     <a class="item" href="/">
       <i class="world icon large blue"></i>
     </a>
     
 
-    <div class="item">
-        <div class="ui labeled icon top right pointing dropdown button" id="filter-trends-menu">
-            <i class="map icon"></i>
-            <span class="text">Select Trend</span>
-            <div class="menu">
-                <div class="ui search icon input">
-                  <i class="search icon"></i>
-                  <input type="text" name="search" placeholder="Search trends...">
-                </div>
-                <div class="divider"></div>
-                <div class="header">
-                  <i class="tags icon"></i>
-                  Filter by trend
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="item">
-        <div class="ui primary button" id="add-keyword">Add Trend</div>
-    </div>
-
-    <div class="item">
-        Attitude: &nbsp; &nbsp; <span id="stats-likes"></span><i class="thumbs outline up icon"></i>
-        &nbsp; &nbsp;
-        <span id="stats-dislikes"></span><i class="thumbs outline down icon"></i>
-    </div>
-
-    <a class="item" href="/reports.php">
+    <a class="item" href="/">
+        <i class="icon map"></i> Map
+    </a>
+    <a class="item active" href="/reports.php">
         <i class="icon pie chart"></i> Reports
     </a>
 
@@ -96,11 +73,47 @@
   </div>
 
 
-  <div id="map"></div>
+<!-- Page Contents -->
+<div class="pusher">
 
-  <div class="ui active dimmer" id="loading-screen">
-    <div class="ui large text loader">Loading</div>
+  <div class="ui vertical stripe segment">
+    <div class="ui stackable grid container">
+      <div class="row">
+        <div class="sixteen wide column">
+
+          <h1 class="ui header">
+            <div class="content"><i class="icon chart line"></i>Available Trends</div>
+          </h1>
+
+          <p>Select trends to compare. Click on any to view details.</p>
+          <form id="compare-trends-form">
+            <div class="ui fluid action input">
+              <select class="ui fluid search dropdown" multiple="" id="trends-list" name="trends[]"></select>
+              <button class="ui teal button" id="compare-trends">Compare</button>
+            </div>
+          </form>
+
+          <table class="ui sortable selectable celled table" id="comparision-table" style="display:none;">
+            <thead>
+              <tr>
+                <th>Trend</th>
+                <th>Mentions</th>
+                <th>Positive</th>
+                <th>Negative</th>
+                <th>Top Countries</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+
+          <div id="chart_div" style="width: 100%; height: 500px;"></div>
+        </div>
+      </div>
+    </div>
   </div>
+</div>
+
 
   <div class="ui modal about-app">
     <i class="close icon"></i>
@@ -121,30 +134,5 @@
       </div>
     </div>
   </div>
-
-
-  <div class="ui modal add-trend">
-  <i class="close icon"></i>
-  <div class="header">
-    Add Trend
-  </div>
-  <div class="content">
-    <form class="ui form">
-      <div class="field">
-        <label>Keyword</label>
-        <input type="text" id="form-keyword" placeholder="Keyword">
-      </div>
-    </form>
-  </div>
-  <div class="actions">
-    <div class="ui black deny button">
-      Cancel
-    </div>
-    <div class="ui positive right labeled icon button">
-      Add
-      <i class="checkmark icon"></i>
-    </div>
-  </div>
-</div>
 </body>
 </html>

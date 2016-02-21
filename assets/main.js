@@ -265,8 +265,78 @@ function getSatisfaction(keywordId)
     }, 'json');
 }
 
+function loadTrends()
+{
+    $.get('/api.php?action=trends', function(data) {
+        $('#trends-list').empty();
+        $.each(data, function(index, value) {
+            $('#trends-list').append('<option value="'+value.id+'">'+value.keyword+'</option>');
+        });
+    }, 'json');
+}
+
+function drawChart(list) {
+    var data = google.visualization.arrayToDataTable(list);
+
+    var options = {
+        title: 'Hourly mentions',
+        hAxis: {title: 'Time',  titleTextStyle: {color: '#333'}},
+        vAxis: {minValue: 0}
+    };
+
+    chart.draw(data, options);
+}
+
+function compareTrends()
+{
+    $.post(
+        '/api.php?action=compare',
+        $('#compare-trends-form').serialize(),
+        function(data) {
+            $('#comparision-table').show();
+            $('#comparision-table tbody').empty();
+            $.each(data, function(index, value) {
+                var countries = '';
+                $.each(value.countries, function(i, c) {
+                    countries += '<i class="'+c.country_code.toLowerCase()+' flag"></i>'+c.num+'&nbsp; &nbsp;';
+                });
+                $('#comparision-table tbody').append('<tr><td>'+value.name+'</td><td>'+value.mentions+'</td><td>'+value.satisfaction.positive+'</td><td>'+value.satisfaction.negative+'</td><td>'+countries+'</td></tr>');
+            });
+        },
+        'json'
+    );
+
+    $.post(
+        '/api.php?action=chart',
+        $('#compare-trends-form').serialize(),
+        function(data) {
+            chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+            drawChart(data);
+        },
+        'json'
+    );
+}
+
 $(document).ready(function() {
-	$('.ui.dropdown').dropdown({
+    if ($('body').hasClass('reports')) {
+        $('#trends-list').dropdown({
+            allowAdditions: true,
+            onChange: function() {
+                $('#trends-list').dropdown('hide');
+            }
+        });
+
+        loadTrends();
+
+        $('#compare-trends').click(function() {
+            compareTrends();
+            return false;
+        });
+
+        $('#comparision-table').tablesort();
+    }
+
+	$('#filter-trends-menu').dropdown({
 		onChange: function(value, text, $selectedItem) {
             var keywordId = $selectedItem.data('keyword-id');
 			loadPoints(keywordId);
