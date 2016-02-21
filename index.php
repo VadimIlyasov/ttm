@@ -39,6 +39,10 @@
       background: red;
     }
 
+    .header img.logo {
+      width: 4em !important;
+    }
+
     body .ui.form .error.message {
       display: block !important;
     }
@@ -51,10 +55,9 @@
   </script>
 
   <div class="ui large menu fixed">
-    <a class="item" href="/">
-      <i class="world icon large blue"></i>
+    <a href="/" class="header item">
+      <img class="logo" src="/assets/logo.png">
     </a>
-    
 
     <div class="item">
         <div class="ui labeled icon top right pointing dropdown button" id="filter-trends-menu">
@@ -109,9 +112,24 @@
     </div>
     <div class="image content">
       <div class="ui medium image">
+        <img src="/assets/big-logo.png">
       </div>
       <div class="description">
-        <div class="ui header">This is tool is aimed to allow analyst and just curious users to find out global trends on different topics.</div>
+        <div class="ui">
+          <p>This is tool is aimed to allow deeper analysis of global trends on different topics and just to allow curious users to discover something interesting.</p>
+          <p>What is under the hood?</p>
+          <ul>
+            <li>Twitter Stream daemon</li>
+            <li>Tweets parser on cron</li>
+            <li>MySQL database collecting mentions, locations and attitudes data</li>
+            <li><a href="http://thematicmapping.org/downloads/world_borders.php" target="_blank">World Boundaries database</a> for reverse geolocations</li>
+          </ul>
+          <p>Who are the developers?</p>
+          <ul>
+            <li><a href="https://www.linkedin.com/in/denisilyasov" target="_blank">Denis Ilyasov</a> - server configuration and testing</li>
+            <li><a href="https://ua.linkedin.com/in/vadimilyasov" target="_blank">Vadim Ilyasov</a> - idea and development</li>
+          </ul>
+        </div>
       </div>
     </div>
     <div class="actions">

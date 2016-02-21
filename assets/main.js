@@ -3,8 +3,8 @@ var map, heatmap;
 
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 2,
-    center: new google.maps.LatLng(51.923957,97.848171),
+    center: new google.maps.LatLng(26.096255,-15.264894),
+    zoom: 3,
     mapTypeId: google.maps.MapTypeId.ROADMAP,
     zoomControl: true,
         zoomControlOptions: {
@@ -281,9 +281,12 @@ function drawChart(list) {
     var options = {
         title: 'Hourly mentions',
         hAxis: {title: 'Time',  titleTextStyle: {color: '#333'}},
-        vAxis: {minValue: 0}
+        vAxis: {minValue: 0},
+        chartArea:{left:'10%',top:'20%',width:'80%',height:'75%'}
     };
 
+
+    $('#chart_div').show();
     chart.draw(data, options);
 }
 
@@ -300,7 +303,7 @@ function compareTrends()
                 $.each(value.countries, function(i, c) {
                     countries += '<i class="'+c.country_code.toLowerCase()+' flag"></i>'+c.num+'&nbsp; &nbsp;';
                 });
-                $('#comparision-table tbody').append('<tr><td>'+value.name+'</td><td>'+value.mentions+'</td><td>'+value.satisfaction.positive+'</td><td>'+value.satisfaction.negative+'</td><td>'+countries+'</td></tr>');
+                $('#comparision-table tbody').append('<tr><td>'+value.name+'</td><td>'+value.mentions+' tweets</td><td>'+value.satisfaction.positive+' <i class="thumbs outline up icon"></td><td>'+value.satisfaction.negative+' <i class="thumbs outline down icon"></td><td>'+countries+'</td></tr>');
             });
         },
         'json'
@@ -320,7 +323,6 @@ function compareTrends()
 $(document).ready(function() {
     if ($('body').hasClass('reports')) {
         $('#trends-list').dropdown({
-            allowAdditions: true,
             onChange: function() {
                 $('#trends-list').dropdown('hide');
             }
