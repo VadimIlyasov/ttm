@@ -104,7 +104,7 @@
         <i class="icon help"></i> Help
       </a>
       <a class="item about-app-link" href="#">
-        <i class="icon help"></i> About
+        <i class="icon idea"></i> About
       </a>
     </div>
   </div>
