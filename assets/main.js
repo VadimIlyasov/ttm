@@ -371,4 +371,9 @@ $(document).ready(function() {
 		$('.ui.modal.about-app').modal('show');
 		return false;
 	});
+
+    $('.help-link').click(function() {
+        $('.ui.modal.help').modal('show');
+        return false;
+    });
 });

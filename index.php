@@ -39,8 +39,16 @@
       background: red;
     }
 
+    .menu a.header {
+      padding: 0 !important;
+    }
     .header img.logo {
-      width: 4em !important;
+      width: 5.7em !important;
+    }
+
+    .ui.menu:not(.vertical) .item>.button {
+        padding-bottom: .51428571em !important;
+        padding-top: .51428571em !important;
     }
 
     body .ui.form .error.message {
@@ -92,6 +100,9 @@
     </a>
 
     <div class="right menu">
+      <a class="item help-link" href="#">
+        <i class="icon help"></i> Help
+      </a>
       <a class="item about-app-link" href="#">
         <i class="icon help"></i> About
       </a>
@@ -142,27 +153,59 @@
 
 
   <div class="ui modal add-trend">
-  <i class="close icon"></i>
-  <div class="header">
-    Add Trend
-  </div>
-  <div class="content">
-    <form class="ui form">
-      <div class="field">
-        <label>Keyword</label>
-        <input type="text" id="form-keyword" placeholder="Keyword">
+    <i class="close icon"></i>
+    <div class="header">
+      Add Trend
+    </div>
+    <div class="content">
+      <form class="ui form">
+        <div class="field">
+          <label>Keyword</label>
+          <input type="text" id="form-keyword" placeholder="Keyword">
+        </div>
+      </form>
+    </div>
+    <div class="actions">
+      <div class="ui black deny button">
+        Cancel
       </div>
-    </form>
-  </div>
-  <div class="actions">
-    <div class="ui black deny button">
-      Cancel
-    </div>
-    <div class="ui positive right labeled icon button">
-      Add
-      <i class="checkmark icon"></i>
+      <div class="ui positive right labeled icon button">
+        Add
+        <i class="checkmark icon"></i>
+      </div>
     </div>
   </div>
-</div>
+
+
+  <div class="ui modal help">
+    <i class="close icon"></i>
+    <div class="header">
+      Twitter GeoTrends Analytics - Help
+    </div>
+    <div class="image content">
+      <div class="ui medium image">
+        <img src="/assets/big-logo.png">
+      </div>
+      <div class="description">
+        <div class="ui">
+          <p>Application consists of two pages:</p>
+          <ul>
+            <li><a href="/">Map</a> page displays heatmap for select trend (keyword)</li>
+            <li><a href="/reports.php">Reports</a> page allows users to see detailed report for selected trends, compare them, etc.</li>
+          </ul>
+          <p>On the map page you can select Trend by clicking dropdown filter on the left side of the header. You can also add new trend by clicking "Add new" button. Please note, it takes time to collect information for your trend, you should allow at least 30-60 minutes to see some results for most keywords.</p>
+          <p>You can also see a trend attitude. We analyze tweets to see if they are positive or negative and collect that information also.</p>
+          <p>On reports page you can see a detailed table with list of mentions for each trend, top 3 Countries, number of positive and negative tweets accordingly.</p>
+          <p>In addition, there is a nice trend-line chart that displays popularity of each trend and allows you to compare them. With bigger timeline it could be useful to see the impact of advertisement campaigns for brands or new products.</p>
+        </div>
+      </div>
+    </div>
+    <div class="actions">
+      <div class="ui positive right labeled icon button">
+        Got it!
+        <i class="checkmark icon"></i>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
