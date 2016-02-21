@@ -104,7 +104,7 @@ switch ($action) {
 					$newRow[$k] = 0;
 				}
 			}
-			$newRow[$row['keyword_id']] = $row['num'];
+			$newRow[$row['keyword_id']] = (int)$row['num'];
 			$prevTime = $row['period'];
 		}
 		$stats[] = array_values($newRow);
