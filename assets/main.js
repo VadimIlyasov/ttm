@@ -218,6 +218,7 @@ function initMap() {
   });
 
 	loadPoints(1);
+    getSatisfaction(1);
 }
 
 var points = [];
@@ -251,15 +252,25 @@ function loadKeywords()
 	$.get('/api.php?action=keywords', function(data) {
 		$('#filter-trends-menu .item').remove();
 		$.each(data, function(index, value) {
-			$('#filter-trends-menu .header').after('<div class="item" data-keyword-id="'+value.id+'"><div class="ui black empty circular label"></div>'+value.keyword+' | '+value.total+' records</div>');
+			$('#filter-trends-menu .header').after('<div class="item" data-keyword-id="'+value.id+'"><div class="ui black empty circular label"></div>'+value.keyword+' | '+value.total+' locations</div>');
 		});
 	}, 'json');
+}
+
+function getSatisfaction(keywordId)
+{
+    $.get('/api.php?action=satisfaction&id='+keywordId, function(data) {
+        $('#stats-likes').text(data[0].positive);
+        $('#stats-dislikes').text(data[0].negative);
+    }, 'json');
 }
 
 $(document).ready(function() {
 	$('.ui.dropdown').dropdown({
 		onChange: function(value, text, $selectedItem) {
-			loadPoints($selectedItem.data('keyword-id'));
+            var keywordId = $selectedItem.data('keyword-id');
+			loadPoints(keywordId);
+            getSatisfaction(keywordId);
 			return false;
     	}
 	});

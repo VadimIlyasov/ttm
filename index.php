@@ -78,6 +78,16 @@
         <div class="ui primary button" id="add-keyword">Add Trend</div>
     </div>
 
+    <div class="item">
+        Attitude: &nbsp; &nbsp; <span id="stats-likes"></span><i class="thumbs outline up icon"></i>
+        &nbsp; &nbsp;
+        <span id="stats-dislikes"></span><i class="thumbs outline down icon"></i>
+    </div>
+
+    <a class="item" href="/reports.php">
+        <i class="icon pie chart"></i> Reports
+      </a>
+
     <div class="right menu">
       <a class="item about-app-link" href="#">
         <i class="icon help"></i> About

@@ -1,0 +1,1 @@
+ALTER TABLE `tweets` ADD `country_code` VARCHAR(2) NOT NULL AFTER `satisfaction`, ADD INDEX (`country_code`);
