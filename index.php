@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Twitter Geo Trends Analysis</title>
+  <title>Twitter GeoTrends Analytics - Home</title>
   <link rel="stylesheet" type="text/css" href="/assets/css/semantic.min.css">
 
   <script src="/assets/jquery-2.2.0.min.js"></script>
@@ -119,7 +119,7 @@
   <div class="ui modal about-app">
     <i class="close icon"></i>
     <div class="header">
-      Twitter GeoTrends Analysis tool
+      Twitter GeoTrends Analytics - About
     </div>
     <div class="image content">
       <div class="ui medium image">
@@ -127,7 +127,7 @@
       </div>
       <div class="description">
         <div class="ui">
-          <p>This is tool is aimed to allow deeper analysis of global trends on different topics and just to allow curious users to discover something interesting.</p>
+          <p>This tool is aimed to allow deeper analysis of global trends on different topics and just to allow curious users to discover something interesting.</p>
           <p>What is under the hood?</p>
           <ul>
             <li>Twitter Stream daemon</li>
@@ -193,10 +193,10 @@
             <li><a href="/">Map</a> page displays heatmap for select trend (keyword)</li>
             <li><a href="/reports.php">Reports</a> page allows users to see detailed report for selected trends, compare them, etc.</li>
           </ul>
-          <p>On the map page you can select Trend by clicking dropdown filter on the left side of the header. You can also add new trend by clicking "Add new" button. Please note, it takes time to collect information for your trend, you should allow at least 30-60 minutes to see some results for most keywords.</p>
+          <p>On the map page, you can select Trend by clicking drop-down filter on the left side of the header. You can also add new trend by clicking "Add new" button. Please note, it takes a time to collect information for your trend, you should allow at least 30-60 minutes to see some results for most keywords.</p>
           <p>You can also see a trend attitude. We analyze tweets to see if they are positive or negative and collect that information also.</p>
-          <p>On reports page you can see a detailed table with list of mentions for each trend, top 3 Countries, number of positive and negative tweets accordingly.</p>
-          <p>In addition, there is a nice trend-line chart that displays popularity of each trend and allows you to compare them. With bigger timeline it could be useful to see the impact of advertisement campaigns for brands or new products.</p>
+          <p>On reports page, you can see a detailed table with the list of mentions for each trend, top 3 Countries, the number of positive and negative tweets accordingly.</p>
+          <p>In addition, there is a nice trendline chart that displays popularity of each trend and allows you to compare them. With bigger timeline it could be useful to see the impact of advertisement campaigns for brands or new products.</p>
         </div>
       </div>
     </div>
